@@ -204,6 +204,5 @@ def server(path):
 if DEBUG:
     logger.info("DEBUG=ON")
 
-# gunicorn -w 4 -b 0.0.0.0:8080 server:app
 if __name__ == "__main__":
     app.run(debug=DEBUG)

@@ -9,7 +9,7 @@ from utils import server_info, logger, token
 
 class JudgeService(object):
     def __init__(self):
-        self.service_url = os.environ["SERVICE_URL"]
+        self.service_port = os.environ["SERVICE_PORT"]
         self.backend_url = os.environ["BACKEND_URL"]
 
     def _request(self, data):
@@ -31,7 +31,7 @@ class JudgeService(object):
     def heartbeat(self):
         data = server_info()
         data["action"] = "heartbeat"
-        data["service_url"] = self.service_url
+        data["service_port"] = self.service_port
         self._request(data)
 
 

@@ -15,5 +15,5 @@ HEALTHCHECK --interval=5s --retries=3 CMD python3.7 /code/service.py
 ADD server /code
 WORKDIR /code
 RUN gcc -shared -fPIC -o unbuffer.so unbuffer.c
-EXPOSE 8080
+ENV SERVICE_PORT 8080
 ENTRYPOINT /code/entrypoint.sh
