@@ -1,14 +1,10 @@
 # coding=utf-8
 from __future__ import unicode_literals
-from os import sys, path
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-
+from client import JudgeServerClient, JudgeServerClientError
+import os
 import json
 import unittest
 import requests
-
-
-from client.Python.client import JudgeServerClient, JudgeServerClientError
 
 
 class JudgeServerClientForTokenHeaderTest(JudgeServerClient):
@@ -24,9 +20,10 @@ class JudgeServerClientForTokenHeaderTest(JudgeServerClient):
 
 class JudgeServerTest(unittest.TestCase):
     def setUp(self):
-        self.token = "YOUR_TOKEN_HERE"
-        self.server_base_url = "http://127.0.0.1:12358"
-        self.client = JudgeServerClient(token=self.token, server_base_url=self.server_base_url)
+        self.token = os.environ["TOKEN"]
+        self.server_base_url = "http://127.0.0.1:" + os.environ["SERVICE_PORT"]
+        self.client = JudgeServerClient(
+            token=self.token, server_base_url=self.server_base_url)
 
     def test_success(self):
         data = self.client.ping()
@@ -34,14 +31,17 @@ class JudgeServerTest(unittest.TestCase):
         self.assertEqual(data["data"]["action"], "pong")
 
     def test_invalid_token(self):
-        client = JudgeServerClient(token="wrong token", server_base_url=self.server_base_url)
+        client = JudgeServerClient(
+            token="wrong token", server_base_url=self.server_base_url)
         data = client.ping()
         self.assertEqual(data["err"], "TokenVerificationFailed")
 
     def test_no_token_header(self):
-        client = JudgeServerClientForTokenHeaderTest(token="wrong token", server_base_url=self.server_base_url)
+        client = JudgeServerClientForTokenHeaderTest(
+            token="wrong token", server_base_url=self.server_base_url)
         data = client.ping()
         self.assertEqual(data["err"], "TokenVerificationFailed")
+
 
 if __name__ == '__main__':
     unittest.main()
