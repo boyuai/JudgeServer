@@ -1,5 +1,6 @@
 import hashlib
 import json
+import os
 
 import requests
 
@@ -54,7 +55,7 @@ class JudgeServerClient(object):
 
 
 if __name__ == "__main__":
-    token = "YOUR_TOKEN_HERE"
+    token = os.environ["TOKEN"]
 
     c_src = r"""
     #include <stdio.h>
@@ -117,7 +118,10 @@ func main() {
     fmt.Printf("%d", a + b)
 }"""
 
-    client = JudgeServerClient(token=token, server_base_url="http://127.0.0.1:12358")
+    client = JudgeServerClient(
+        token=token,
+        server_base_url="http://127.0.0.1:" + os.environ["SERVICE_PORT"],
+    )
     print("ping")
     print(client.ping(), "\n\n")
 
@@ -146,7 +150,6 @@ func main() {
                        test_case_id="spj",
                        spj_version="3", spj_config=c_lang_spj_config,
                        spj_compile_config=c_lang_spj_compile, spj_src=c_spj_src), "\n\n")
-
 
     print("py2_judge")
     print(client.judge(src=py2_src, language_config=py2_lang_config,

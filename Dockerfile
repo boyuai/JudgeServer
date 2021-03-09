@@ -13,6 +13,7 @@ RUN buildDeps='software-properties-common git libtool cmake python3.7-dev python
     useradd -u 12001 compiler && useradd -u 12002 code && useradd -u 12003 spj && usermod -a -G code spj
 HEALTHCHECK --interval=5s --retries=3 CMD python3.7 /code/service.py
 ADD server /code
+ADD tests /code/tests
 WORKDIR /code
 RUN gcc -shared -fPIC -o unbuffer.so unbuffer.c
 ENV SERVICE_PORT 8080
