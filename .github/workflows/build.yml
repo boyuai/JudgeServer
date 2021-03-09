@@ -1,0 +1,24 @@
+name: package
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: build
+      run: docker build -t ghcr.io/boyuai/online-judge-server .
+    - name: login ghcr
+      run: echo ${{ secrets.GHCR_TOKEN }} | docker login -u boyuai ghcr.io --password-stdin
+    - name: push
+      run: docker push ghcr.io/boyuai/online-judge-server
+    - uses: wangsijie/feishu-bot@v1
+      with:
+        uuid: 20ff8f37-7247-4a69-979d-148af984d6be
+        text: 🎉 judge-server编译成功，需要手动上线
